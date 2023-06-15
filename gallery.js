@@ -1,20 +1,38 @@
-const DOG_URL = "https://dog.ceo/api/breeds/image/random";
+let currentlySelected = 0;
+const nodes = document.querySelectorAll(".gallery-img");
+const prevBtn = document.querySelector(".prev");
+const nextBtn = document.querySelector(".next");
 
-const doggos = document.querySelector(".doggos");
+function previous() {
+  nextBtn.disabled = false;
+  nodes[currentlySelected].classList.remove("active");
+  currentlySelected--;
+  nodes[currentlySelected].classList.add("active");
 
-function addNewDoggo() {
-  const promise = fetch(DOG_URL);
-  promise
-    .then(function(response) {
-      const processingPromise = response.json();
-      return processingPromise;
-    })
-    .then(function(processedResponse) {
-      const img = document.createElement("img");
-      img.src = processedResponse.message;
-      img.alt = "Cute doggo";
-      doggos.appendChild(img);
-    });
+  if (currentlySelected === 0) {
+    prevBtn.disabled = true;
+  }
 }
 
-document.querySelector(".add-doggo").addEventListener("click", addNewDoggo);
+function next() {
+  prevBtn.disabled = false;
+  nodes[currentlySelected].classList.remove("active");
+  currentlySelected++;
+  nodes[currentlySelected].classList.add("active");
+
+  if (currentlySelected + 1 === nodes.length) {
+    nextBtn.disabled = true;
+  }
+}
+
+function init() {
+  prevBtn.addEventListener("click", function() {
+    previous();
+  });
+
+  nextBtn.addEventListener("click", function(e) {
+    next();
+  });
+}
+
+init();
